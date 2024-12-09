@@ -3,6 +3,10 @@
 ## Cíl projektu
 Cílem tohoto projektu je vytvořit konzolovou aplikaci v jazyce Python, která umožní uživatelům interagovat s databází chemických prvků.
 
+## Autoři projektu
+### [Ondřej Honus](https://github.com/ondrejhonus)
+### [Walter Oboňa](https://github.com/Dvojak)
+
 ## Funkcionalita programu
 - **Načítání dat**: Import dat z CSV souboru do vhodné datové struktury v Pythonu.
 - **Symbolické menu**: Opakovaný výběr z různých předvoleb v rámci konzolové aplikace.
