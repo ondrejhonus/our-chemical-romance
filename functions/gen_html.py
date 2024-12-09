@@ -1,8 +1,9 @@
 import json
+groups_filename = 'imports/groups.json'
 
 def generate_html_table(elements, filename="generated/periodic_table.html"):
     # Načtení skupin z JSON
-    with open("imports/groups.json", 'r', encoding='utf-8') as file:
+    with open(groups_filename, 'r', encoding='utf-8') as file:
         groups = json.load(file)
 
     # Přiřazení skupin prvkům
@@ -17,25 +18,33 @@ def generate_html_table(elements, filename="generated/periodic_table.html"):
         for element in group['elements']:
             element_classes[element] = group_name.replace(' ', '_')
 
+    # Oddělení lanthanoidů a aktinoidů
+    lanthanoids = [e for e in elements if 57 <= e['atomic_number'] <= 71]
+    actinoids = [e for e in elements if 89 <= e['atomic_number'] <= 103]
+    main_elements = [e for e in elements if e not in lanthanoids and e not in actinoids]
+
     # Vytvoření mřížky pro periodickou tabulku
     table = [["" for _ in range(18)] for _ in range(7)]
 
-    # Naplnění mřížky prvky
-    for element in elements:
+    for element in main_elements:
         try:
             group = int(element['group'])
             period = int(element['period'])
             element_class = element_classes.get(element['symbol'], "unknown")
-            table[period - 1][group - 1] = (
-                f"<div class='element {element_class}' onclick=\"showPopup('{element['symbol']}', '{element['name']}', {element['atomic_number']}, '{element['group']}', '{element['period']}', {element['atomic_weight']}, '{element['state']}')\">"
-                f"<div class='atomic-number'>{element['atomic_number']}</div>"
-                f"<div class='symbol'>{element['symbol']}</div>"
-                f"<div class='name'>{element['name']}</div>"
-                f"<div class='atomic-weight'>{element['atomic_weight']}</div>"
-                f"</div>"
-            )
+            if element['atomic_number'] == 57 or element['atomic_number'] == 89:
+                # Prázdné místo pro lanthanoidy/aktinoidy
+                table[period - 1][group - 1] = "<div class='empty'></div>"
+            else:
+                table[period - 1][group - 1] = (
+                    f"<div class='element {element_class}' onclick=\"showPopup('{element['symbol']}', '{element['name']}', {element['atomic_number']}, '{element['group']}', '{element['period']}', {element['atomic_weight']}, '{element['state']}')\">"
+                    f"<div class='atomic-number'>{element['atomic_number']}</div>"
+                    f"<div class='symbol'>{element['symbol']}</div>"
+                    f"<div class='name'>{element['name']}</div>"
+                    f"<div class='atomic-weight'>{element['atomic_weight']}</div>"
+                    f"</div>"
+                )
         except ValueError:
-            continue  # Přeskočí prvky s neplatnou skupinou nebo periodou
+            continue
 
     # Generování HTML
     with open(filename, 'w', encoding='utf-8') as htmlfile:
@@ -54,6 +63,13 @@ def generate_html_table(elements, filename="generated/periodic_table.html"):
             max-width: 95vw;
             margin: auto;
         }
+        .lanthanoids, .actinoids {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 2px;
+            margin: 10px auto;
+            max-width: 95vw;
+        }
         .element {
             display: flex;
             flex-direction: column;
@@ -65,6 +81,10 @@ def generate_html_table(elements, filename="generated/periodic_table.html"):
             padding: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             cursor: pointer;
+        }
+        .empty {
+            border: 1px solid transparent;
+            background-color: #f0f0f0;
         }
         .atomic-number {
             font-size: 0.7em;
@@ -82,36 +102,6 @@ def generate_html_table(elements, filename="generated/periodic_table.html"):
             font-size: 0.7em;
             color: #999;
         }
-        .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            z-index: 1000;
-            display: none;
-        }
-        .popup .close {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            cursor: pointer;
-            color: #aaa;
-        }
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            display: none;
-        }
         """ + "\n".join(css_rules) + """
         </style></head><body>
         <div class='overlay' id='overlay' onclick='hidePopup()'></div>
@@ -128,8 +118,35 @@ def generate_html_table(elements, filename="generated/periodic_table.html"):
                     htmlfile.write(cell)
                 else:
                     htmlfile.write("<div class='element' style='background-color: #f0f0f0;'></div>")
-
+        
+        # Přidání lanthanoidů
+        htmlfile.write("<div class='lanthanoids'>")
+        for element in lanthanoids:
+            element_class = element_classes.get(element['symbol'], "unknown")
+            htmlfile.write(
+                f"<div class='element {element_class}' onclick=\"showPopup('{element['symbol']}', '{element['name']}', {element['atomic_number']}, '{element['group']}', '{element['period']}', {element['atomic_weight']}, '{element['state']}')\">"
+                f"<div class='atomic-number'>{element['atomic_number']}</div>"
+                f"<div class='symbol'>{element['symbol']}</div>"
+                f"<div class='name'>{element['name']}</div>"
+                f"<div class='atomic-weight'>{element['atomic_weight']}</div>"
+                f"</div>"
+            )
         htmlfile.write("</div>")
+
+        # Přidání aktinoidů
+        htmlfile.write("<div class='actinoids'>")
+        for element in actinoids:
+            element_class = element_classes.get(element['symbol'], "unknown")
+            htmlfile.write(
+                f"<div class='element {element_class}' onclick=\"showPopup('{element['symbol']}', '{element['name']}', {element['atomic_number']}, '{element['group']}', '{element['period']}', {element['atomic_weight']}, '{element['state']}')\">"
+                f"<div class='atomic-number'>{element['atomic_number']}</div>"
+                f"<div class='symbol'>{element['symbol']}</div>"
+                f"<div class='name'>{element['name']}</div>"
+                f"<div class='atomic-weight'>{element['atomic_weight']}</div>"
+                f"</div>"
+            )
+        htmlfile.write("</div>")
+        
         htmlfile.write("""
         <script>
         function showPopup(symbol, name, atomicNumber, group, period, atomicWeight, state) {
@@ -157,4 +174,4 @@ def generate_html_table(elements, filename="generated/periodic_table.html"):
         </body></html>
         """)
 
-    print(f"Periodická tabulka s barvami byla vygenerována a uložena jako {filename}.")
+    print(f"Periodická tabulka s lanthanoidy a aktinoidy byla vygenerována a uložena jako {filename}.")
