@@ -58,7 +58,7 @@ def generate_html_table(elements, filename="generated/periodic_table.html"):
         }
         .periodic-table {
             display: grid;
-            grid-template-columns: repeat(18, 1fr);
+            grid-template-columns: repeat(18, 1fr); /* All columns have the same width */
             gap: 2px;
             max-width: 95vw;
             margin: auto;
@@ -69,6 +69,9 @@ def generate_html_table(elements, filename="generated/periodic_table.html"):
             gap: 2px;
             margin: 10px auto;
             max-width: 95vw;
+        }
+        .lanthanoids {
+            margin-bottom: 20px; /* Add margin to separate lanthanoids and actinoids */
         }
         .element {
             display: flex;
@@ -102,6 +105,35 @@ def generate_html_table(elements, filename="generated/periodic_table.html"):
             font-size: 0.7em;
             color: #999;
         }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1001;
+        }
+        .popup .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
         """ + "\n".join(css_rules) + """
         </style></head><body>
         <div class='overlay' id='overlay' onclick='hidePopup()'></div>
@@ -119,8 +151,8 @@ def generate_html_table(elements, filename="generated/periodic_table.html"):
                 else:
                     htmlfile.write("<div class='element' style='background-color: #f0f0f0;'></div>")
         
-        # Přidání lanthanoidů
-        htmlfile.write("<div class='lanthanoids'>")
+        # Přidání lanthanoidů na první řádek pod tabulkou
+        htmlfile.write("</div><div class='lanthanoids'>")
         for element in lanthanoids:
             element_class = element_classes.get(element['symbol'], "unknown")
             htmlfile.write(
@@ -133,7 +165,7 @@ def generate_html_table(elements, filename="generated/periodic_table.html"):
             )
         htmlfile.write("</div>")
 
-        # Přidání aktinoidů
+        # Přidání aktinoidů na druhý řádek pod tabulkou
         htmlfile.write("<div class='actinoids'>")
         for element in actinoids:
             element_class = element_classes.get(element['symbol'], "unknown")
