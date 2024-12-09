@@ -18,6 +18,9 @@ Cílem tohoto projektu je vytvořit konzolovou aplikaci v jazyce Python, která 
 - **Export do XML**: Export vybraných dat do XML souboru.
 - **Markdown přehled**: Vytvoření Markdown souboru s přehledem prvků v konkrétní skupině nebo periodě.
 
+## Periodická tabulka
+<img src="img/table.png" alt="periodic-table" width="50%">
+
 ## Jak spustit aplikaci
 1. Naklonujte tento repozitář: `git clone https://github.com/ondrejhonus/our-chemical-romance`
 3. Spusťte aplikaci: `python main.py`
