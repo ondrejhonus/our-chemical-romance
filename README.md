@@ -19,7 +19,7 @@ Cílem tohoto projektu je vytvořit konzolovou aplikaci v jazyce Python, která 
 - **Markdown přehled**: Vytvoření Markdown souboru s přehledem prvků v konkrétní skupině nebo periodě.
 
 ## Periodická tabulka
-<img src="img/table.png" alt="periodic-table" width="50%">
+<img src="img/table.png" alt="periodic-table" width="70%">
 
 ## Jak spustit aplikaci
 1. Naklonujte tento repozitář: `git clone https://github.com/ondrejhonus/our-chemical-romance`
