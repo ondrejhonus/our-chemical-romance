@@ -14,6 +14,7 @@ Cílem tohoto projektu je vytvořit konzolovou aplikaci v jazyce Python, která 
 - **Zobrazení vlastností**: Zobrazení všech vlastností vybraného prvku.
 - **Výpočet průměrné hmotnosti**: Výpočet průměrné relativní atomové hmotnosti prvků ve vybrané skupině nebo periodě.
 - **Generování HTML tabulky**: Vytvoření HTML tabulky se seznamem všech prvků a jejich základními vlastnostmi.
+- **Export do JSON**: Export vybraných dat do JSON souboru.
 - **Export do XML**: Export vybraných dat do XML souboru.
 - **Markdown přehled**: Vytvoření Markdown souboru s přehledem prvků v konkrétní skupině nebo periodě.
 
