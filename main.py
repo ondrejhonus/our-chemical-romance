@@ -8,7 +8,8 @@ from functions.all_func import (
     display_element_properties,
     calculate_average_atomic_weight,
     export_elements_to_json,
-    export_elements_to_markdown
+    export_elements_to_markdown,
+    export_elements_to_xml
 )
 
 def main():
@@ -44,11 +45,11 @@ def main():
             else:
                 print("Prvek nenalezen.")
         elif choice == '5':
-            group = input("Zadejte skupinu: ")
-            group_elements = [e for e in elements if e['group'] == group]
-            export_elements_to_markdown(group_elements)
+            export_elements_to_markdown(elements)
             print("Data byla exportována do Markdown.")
         elif choice == '6':
+            export_elements_to_xml(elements)
+        elif choice == '7':
             break
         else:
             print("Neplatná volba, zkuste to znovu.")

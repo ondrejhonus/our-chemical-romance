@@ -32,7 +32,8 @@ def display_menu():
     print("3. Generovat HTML tabulku")
     print("4. Export do JSON")
     print("5. Export do Markdown")
-    print("6. Konec")
+    print("6. Export do XML")
+    print("7. Konec")
 
 def get_user_choice():
     choice = input("Vyberte možnost: ")
@@ -57,7 +58,7 @@ def calculate_average_atomic_weight(elements, group=None, period=None):
     total_weight = sum(e['atomic_weight'] for e in filtered_elements)
     return total_weight / len(filtered_elements)
 
-def export_elements_to_json(elements, filename="generated/selected_elements.json"):
+def export_elements_to_json(elements, filename="generated/selected_element.json"):
     with open(filename, 'w', encoding='utf-8') as jsonfile:
         json.dump(elements, jsonfile, indent=4)
 
@@ -70,3 +71,17 @@ def export_elements_to_markdown(elements, filename="generated/elements_overview.
             mdfile.write(f"- **Period:** {element['period']}\n")
             mdfile.write(f"- **Atomic Weight:** {element['atomic_weight']}\n")
             mdfile.write(f"- **State:** {element['state']}\n\n")
+
+def export_elements_to_xml(elements, filename='generated/elements.xml'):
+        import xml.etree.ElementTree as ET
+
+        root = ET.Element("elements")
+        for element in elements:
+            element_elem = ET.SubElement(root, "element")
+            for key, value in element.items():
+                child = ET.SubElement(element_elem, key)
+                child.text = str(value)
+
+        tree = ET.ElementTree(root)
+        tree.write(filename, encoding='utf-8', xml_declaration=True)
+        print(f"Data byla exportována do XML souboru {filename}.")
